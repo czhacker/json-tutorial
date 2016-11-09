@@ -32,11 +32,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="leptjson.c" pinned="false" current-in-tab="false">
+      <file leaf-file-name="leptjson.c" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/leptjson.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="301">
-              <caret line="54" column="48" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
+            <state relative-caret-position="346">
+              <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -54,13 +54,15 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="test.c" pinned="false" current-in-tab="true">
+      <file leaf-file-name="test.c" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/test.c">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="496">
+            <state relative-caret-position="871">
               <caret line="79" column="22" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
+                <marker date="1478691096000" expanded="true" signature="616:769" placeholder="{...}" />
+                <marker date="1478691096000" expanded="true" signature="800:953" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -71,8 +73,8 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/leptjson.c" />
         <option value="$PROJECT_DIR$/test.c" />
+        <option value="$PROJECT_DIR$/leptjson.c" />
       </list>
     </option>
   </component>
@@ -217,6 +219,18 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/test.c">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="871">
+          <caret line="79" column="22" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#18#0" expanded="true" />
+            <marker date="1478691096000" expanded="true" signature="616:769" placeholder="{...}" />
+            <marker date="1478691096000" expanded="true" signature="800:953" placeholder="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/leptjson.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -227,20 +241,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/leptjson.c">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="301">
-          <caret line="54" column="48" selection-start-line="54" selection-start-column="48" selection-end-line="54" selection-end-column="48" />
+        <state relative-caret-position="346">
+          <caret line="56" column="4" selection-start-line="56" selection-start-column="4" selection-end-line="56" selection-end-column="4" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/test.c">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="496">
-          <caret line="79" column="22" selection-start-line="79" selection-start-column="22" selection-end-line="79" selection-end-column="22" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
           </folding>
         </state>
       </provider>
