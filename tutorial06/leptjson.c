@@ -127,7 +127,66 @@ static void lept_encode_utf8(lept_context* c, unsigned u) {
 
 #define STRING_ERROR(ret) do { c->top = head; return ret; } while(0)
 
+static int lept_parse_string_raw(lept_context* c, char** str, size_t* len)
+{
+    size_t head = c->top, len_1;
+    unsigned  u, u2;
+    const char* p;
+    EXPECT(c, '\"');
+    p = c->json;
+    for(;;)
+    {
+        char ch = *p++;
+        switch (ch){
+            case '\"':
+                len_1 = c->top - head;
+                *len = len_1;
+                memcpy(*str,(const char*)lept_context_pop(c,len_1),len_1);
+                c->json = p;
+
+                return LEPT_PARSE_OK;
+            case '\\':
+                switch (*p++) {
+                    case '\"': PUTC(c, '\"'); break;
+                    case '\\': PUTC(c, '\\'); break;
+                    case '/':  PUTC(c, '/' ); break;
+                    case 'b':  PUTC(c, '\b'); break;
+                    case 'f':  PUTC(c, '\f'); break;
+                    case 'n':  PUTC(c, '\n'); break;
+                    case 'r':  PUTC(c, '\r'); break;
+                    case 't':  PUTC(c, '\t'); break;
+                    case 'u':
+                        if (!(p = lept_parse_hex4(p, &u)))
+                            STRING_ERROR(LEPT_PARSE_INVALID_UNICODE_HEX);
+                        if (u >= 0xD800 && u <= 0xDBFF) { /* surrogate pair */
+                            if (*p++ != '\\')
+                                STRING_ERROR(LEPT_PARSE_INVALID_UNICODE_SURROGATE);
+                            if (*p++ != 'u')
+                                STRING_ERROR(LEPT_PARSE_INVALID_UNICODE_SURROGATE);
+                            if (!(p = lept_parse_hex4(p, &u2)))
+                                STRING_ERROR(LEPT_PARSE_INVALID_UNICODE_HEX);
+                            if (u2 < 0xDC00 || u2 > 0xDFFF)
+                                STRING_ERROR(LEPT_PARSE_INVALID_UNICODE_SURROGATE);
+                            u = (((u - 0xD800) << 10) | (u2 - 0xDC00)) + 0x10000;
+                        }
+                        lept_encode_utf8(c, u);
+                        break;
+                    default:
+                        STRING_ERROR(LEPT_PARSE_INVALID_STRING_ESCAPE);
+                }
+                break;
+            case '\0':
+                STRING_ERROR(LEPT_PARSE_MISS_QUOTATION_MARK);
+            default:
+                if ((unsigned char)ch < 0x20)
+                    STRING_ERROR(LEPT_PARSE_INVALID_STRING_CHAR);
+                PUTC(c, ch);
+        }
+    }
+}
+
 static int lept_parse_string(lept_context* c, lept_value* v) {
+#if 0
     size_t head = c->top, len;
     unsigned u, u2;
     const char* p;
@@ -179,6 +238,17 @@ static int lept_parse_string(lept_context* c, lept_value* v) {
                 PUTC(c, ch);
         }
     }
+#endif
+    int ret;
+    int lenOfC = strlen(c->json) + 1;
+    char *str = (char *)malloc(sizeof(char) * lenOfC);
+
+    size_t* len = (size_t*)malloc(sizeof(size_t));
+    if((ret = lept_parse_string_raw(c,&str,len)) == LEPT_PARSE_OK)
+        lept_set_string(v,str,*len);
+    free(len);
+    free(str);
+    return ret;
 }
 
 static int lept_parse_value(lept_context* c, lept_value* v);

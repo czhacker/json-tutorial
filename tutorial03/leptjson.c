@@ -111,7 +111,7 @@ static int lept_parse_string(lept_context* c, lept_value* v) {
                         PUTC(c, '\\');
                         break;
                     case '\/':
-                        PUTC(c, '\\/');
+                        PUTC(c, '\/');
                         break;
                     case 'b':
                         PUTC(c, '\b');
@@ -201,7 +201,6 @@ int lept_get_boolean(const lept_value* v) {
 
 void lept_set_boolean(lept_value* v, int b) {
     /* \TODO */
-    assert(v != NULL);
     lept_free(v);
     v->u.n = b;
     if(b == 0)
@@ -217,7 +216,6 @@ double lept_get_number(const lept_value* v) {
 
 void lept_set_number(lept_value* v, double n) {
     /* \TODO */
-    assert(v != NULL);
     lept_free(v);
     v->u.n = n;
     v->type = LEPT_NUMBER;

@@ -3,49 +3,49 @@
 * Milo Yip
 * 2016/9/15
 
-本文是[《从零开始的 JSON 库教程》](https://zhuanlan.zhihu.com/json-tutorial)的第一个单元。教程练习源代码位于 [json-tutorial](https://github.com/miloyip/json-tutorial)。
+本文是[《从零开始的 JSON 库教程》][1]的第一个单元。教程练习源代码位于 [json-tutorial][2]。
 
 本单元内容：
 
-1. [JSON 是什么](#json-是什么)
-2. [搭建编译环境](#搭建编译环境)
-3. [头文件与 API 设计](#头文件与-api-设计)
-4. [JSON 语法子集](#json-语法子集)
-5. [单元测试](#单元测试)
-6. [宏的编写技巧](#宏的编写技巧)
-7. [实现解析器](#实现解析器)
-8. [关于断言](#关于断言)
-9. [总结与练习](#总结与练习)
-10. [常见问答](#常见问答)
+1. [JSON 是什么][3]
+2. [搭建编译环境][4]
+3. [头文件与 API 设计][5]
+4. [JSON 语法子集][6]
+5. [单元测试][7]
+6. [宏的编写技巧][8]
+7. [实现解析器][9]
+8. [关于断言][10]
+9. [总结与练习][11]
+10. [常见问答][12]
 
 ## JSON 是什么
 
-JSON（JavaScript Object Notation）是一个用于数据交换的文本格式，现时的标准为[ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf)。
+JSON（JavaScript Object Notation）是一个用于数据交换的文本格式，现时的标准为[ECMA-404][13]。
 
 虽然 JSON 源至于 JavaScript 语言，但它只是一种数据格式，可用于任何编程语言。现时具类似功能的格式有 XML、YAML，当中以 JSON 的语法最为简单。
 
 例如，一个动态网页想从服务器获得数据时，服务器从数据库查找数据，然后把数据转换成 JSON 文本格式：
 
-~~~js
+\~\~\~js
 {
-    "title": "Design Patterns",
-    "subtitle": "Elements of Reusable Object-Oriented Software",
-    "author": [
-        "Erich Gamma",
-        "Richard Helm",
-        "Ralph Johnson",
-        "John Vlissides"
-    ],
-    "year": 2009,
-    "weight": 1.8,
-    "hardcover": true,
-    "publisher": {
-        "Company": "Pearson Education",
-        "Country": "India"
-    },
-    "website": null
+	"title": "Design Patterns",
+	"subtitle": "Elements of Reusable Object-Oriented Software",
+	"author": [
+	    "Erich Gamma",
+	    "Richard Helm",
+	    "Ralph Johnson",
+	    "John Vlissides"
+	],
+	"year": 2009,
+	"weight": 1.8,
+	"hardcover": true,
+	"publisher": {
+	    "Company": "Pearson Education",
+	    "Country": "India"
+	},
+	"website": null
 }
-~~~
+\~\~\~
 
 网页的脚本代码就可以把此 JSON 文本解析为内部的数据结构去使用。
 
@@ -64,7 +64,7 @@ JSON（JavaScript Object Notation）是一个用于数据交换的文本格式�
 2. 提供接口访问该数据结构（access）。
 3. 把数据结构转换成 JSON 文本（stringify）。
 
-![requirement](images/requirement.png)
+![requirement][image-1]
 
 我们会逐步实现这些需求。在本单元中，我们只实现最简单的 null 和 boolean 解析。
 
@@ -72,7 +72,7 @@ JSON（JavaScript Object Notation）是一个用于数据交换的文本格式�
 
 我们要做的库是跨平台、跨编译器的，同学可使用任意平台进行练习。
 
-练习源代码位于 [json-tutorial](https://github.com/miloyip/json-tutorial)，当中 tutorial01 为本单元的练习代码。建议同学登记为 GitHub 用户，把项目 fork 一个自己的版本，然后在上面进行修改。不了解版本管理的同学，也可以按右方「Clone or download」按钮，简单下载一个 zip 文件。
+练习源代码位于 [json-tutorial][14]，当中 tutorial01 为本单元的练习代码。建议同学登记为 GitHub 用户，把项目 fork 一个自己的版本，然后在上面进行修改。不了解版本管理的同学，也可以按右方「Clone or download」按钮，简单下载一个 zip 文件。
 
 我们的 JSON 库名为 leptjson，代码文件只有 3 个：
 
@@ -80,49 +80,49 @@ JSON（JavaScript Object Notation）是一个用于数据交换的文本格式�
 2. `leptjson.c`：leptjson 的实现文件（implementation file），含有内部的类型声明和函数实现。此文件会编译成库。
 3. `test.c`：我们使用测试驱动开发（test driven development, TDD）。此文件包含测试程序，需要链接 leptjson 库。
 
-为了方便跨平台开发，我们会使用一个现时最流行的软件配置工具 [CMake](https://cmake.org/)。
+为了方便跨平台开发，我们会使用一个现时最流行的软件配置工具 [CMake][15]。
 
 在 Windows 下，下载安装 CMake 后，可以使用其 cmake-gui 程序：
 
-![cmake-gui](images/cmake-gui.png)
+![cmake-gui][image-2]
 
 先在 "Where is the source code" 选择 json-tutorial/tutorial01，再在 "Where to build the binary" 键入上一个目录加上 /build。
 
 按 Configure，选择编译器，然后按 Generate 便会生成 Visual Studio 的 .sln 和 .vcproj 等文件。注意这个 build 目录都是生成的文件，可以随时删除，也不用上传至仓库。
 
-在 OS X 下，建议安装 [Homebrew](http://brew.sh/)，然后在命令行键入：
+在 OS X 下，建议安装 [Homebrew][16]，然后在命令行键入：
 
-~~~
+\~\~\~
 $ brew install cmake
 $ cd github/json-tutorial/tutorial01
 $ mkdir build
 $ cd build
-$ cmake -DCMAKE_BUILD_TYPE=Debug ..
+$ cmake -DCMAKE\_BUILD\_TYPE=Debug ..
 $ make
-~~~
+\~\~\~
 
 这样会使用 GNU make 来生成项目，把 Debug 改成 Release 就会生成 Release 配置的 makefile。
 
 若你喜欢的话，CMake 也可以生成 Xcode 项目：
 
-~~~
+\~\~\~
 $ cmake -G Xcode ..
-$ open leptjson_test.xcodeproj
-~~~
+$ open leptjson\_test.xcodeproj
+\~\~\~
 
 而在 Ubuntu 下，可使用 `apt-get` 来安装：
 
-~~~
+\~\~\~
 $ apt-get install cmake
-~~~
+\~\~\~
 
 无论使用什么平台及编译环境，编译运行后会出现：
 
-~~~
-$ ./leptjson_test
+\~\~\~
+$ ./leptjson\_test
 /Users/miloyip/github/json-tutorial/tutorial01/test.c:56: expect: 3 actual: 0
 11/12 (91.67%) passed
-~~~
+\~\~\~
 
 若看到类似以上的结果，说明已成功搭建编译环境，我们可以去看看那几个代码文件的内容了。
 
@@ -130,81 +130,81 @@ $ ./leptjson_test
 
 C 语言有头文件的概念，需要使用 `#include`去引入头文件中的类型声明和函数声明。但由于头文件也可以 `#include` 其他头文件，为避免重复声明，通常会利用宏加入 include 防范（include guard）：
 
-~~~c
-#ifndef LEPTJSON_H__
-#define LEPTJSON_H__
+\~\~\~c
+# ifndef LEPTJSON\_H\_\_
+# define LEPTJSON\_H\_\_
 
-/* ... */
+/\* ... \*/
 
-#endif /* LEPTJSON_H__ */
-~~~
+# endif /\* LEPTJSON\_H\_\_ \*/
+\~\~\~
 
 宏的名字必须是唯一的，通常习惯以 `_H__` 作为后缀。由于 leptjson 只有一个头文件，可以简单命名为 `LEPTJSON_H__`。如果项目有多个文件或目录结构，可以用 `项目名称_目录_文件名称_H__` 这种命名方式。
 
 如前所述，JSON 中有 6 种数据类型，如果把 true 和 false 当作两个类型就是 7 种，我们为此声明一个枚举类型（enumeration type）：
 
-~~~c
-typedef enum { LEPT_NULL, LEPT_FALSE, LEPT_TRUE, LEPT_NUMBER, LEPT_STRING, LEPT_ARRAY, LEPT_OBJECT } lept_type;
-~~~
+\~\~\~c
+typedef enum { LEPT\_NULL, LEPT\_FALSE, LEPT\_TRUE, LEPT\_NUMBER, LEPT\_STRING, LEPT\_ARRAY, LEPT\_OBJECT } lept\_type;
+\~\~\~
 
 因为 C 语言没有 C++ 的命名空间（namespace）功能，一般会使用项目的简写作为标识符的前缀。通常枚举值用全大写（如 `LEPT_NULL`），而类型及函数则用小写（如 `lept_type`）。
 
 接下来，我们声明 JSON 的数据结构。JSON 是一个树形结构，我们最终需要实现一个树的数据结构，每个节点使用 `lept_value` 结构体表示，我们会称它为一个 JSON 值（JSON value）。
-在此单元中，我们只需要实现 null, true 和 false 的解析，因此该结构体只需要存储一个 lept_type。之后的单元会逐步加入其他数据。
+在此单元中，我们只需要实现 null, true 和 false 的解析，因此该结构体只需要存储一个 lept\_type。之后的单元会逐步加入其他数据。
 
-~~~c
+\~\~\~c
 typedef struct {
-    lept_type type;
-}lept_value;
-~~~
+	lept_type type;
+}lept\_value;
+\~\~\~
 
 C 语言的结构体是以 `struct X {}` 形式声明的，定义变量时也要写成 `struct X x;`。为方便使用，上面的代码使用了 `typedef`。
 
 然后，我们现在只需要两个 API 函数，一个是解析 JSON：
 
-~~~c
-int lept_parse(lept_value* v, const char* json);
-~~~
+\~\~\~c
+int lept\_parse(lept\_value\* v, const char\* json);
+\~\~\~
 
 传入的 JSON 文本是一个 C 字符串（空结尾字符串／null-terminated string），由于我们不应该改动这个输入字符串，所以使用 `const char*` 类型。
 
 另一注意点是，传入的根节点指针 v 是由使用方负责分配的，所以一般用法是：
 
-~~~c
-lept_value v;
+\~\~\~c
+lept\_value v;
 const char json[] = ...;
-int ret = lept_parse(&v, json);
-~~~
+int ret = lept\_parse(&v, json);
+\~\~\~
 
 返回值是以下这些枚举值，无错误会返回 `LEPT_PARSE_OK`，其他值在下节解释。
 
-~~~c
+\~\~\~c
 enum {
-    LEPT_PARSE_OK = 0,
-    LEPT_PARSE_EXPECT_VALUE,
-    LEPT_PARSE_INVALID_VALUE,
-    LEPT_PARSE_ROOT_NOT_SINGULAR
+	LEPT_PARSE_OK = 0,
+	LEPT_PARSE_EXPECT_VALUE,
+	LEPT_PARSE_INVALID_VALUE,
+	LEPT_PARSE_ROOT_NOT_SINGULAR
 };
-~~~
+\~\~\~
 
 现时我们只需要一个访问结果的函数，就是获取其类型：
 
-~~~c
-lept_type lept_get_type(const lept_value* v);
-~~~
+\~\~\~c
+lept\_type lept\_get\_type(const lept\_value\* v);
+\~\~\~
 
 ## JSON 语法子集
 
-下面是此单元的 JSON 语法子集，使用 [RFC7159](http://rfc7159.net/rfc7159) 中的 [ABNF](https://tools.ietf.org/html/rfc5234) 表示：
+下面是此单元的 JSON 语法子集，使用 [RFC7159][17] 中的 [ABNF][18] 表示：
 
-~~~
+\~\~\~
 JSON-text = ws value ws
-ws = *(%x20 / %x09 / %x0A / %x0D)
+ws = \*(%x20 / %x09 / %x0A / %x0D)
 value = null / false / true 
 null  = "null"
 false = "false"
 true  = "true"
-~~~
+\~\~\~
 
 当中 `%xhh` 表示以 16 进制表示的字符，`/` 是多选一，`*` 是零或多个，`()` 用于分组。
 
@@ -226,7 +226,7 @@ true  = "true"
 
 许多同学在做练习题时，都是以 `printf`／`cout` 打印结果，再用肉眼对比结果是否乎合预期。但当软件项目越来越复杂，这个做法会越来越低效。一般我们会采用自动的测试方式，例如单元测试（unit testing）。单元测试也能确保其他人修改代码后，原来的功能维持正确（这称为回归测试／regression testing）。
 
-常用的单元测试框架有 xUnit 系列，如 C++ 的 [Google Test](https://github.com/google/googletest)、C# 的 [NUnit](http://www.nunit.org/)。我们为了简单起见，会编写一个极简单的单元测试方式。
+常用的单元测试框架有 xUnit 系列，如 C++ 的 [Google Test][19]、C# 的 [NUnit][20]。我们为了简单起见，会编写一个极简单的单元测试方式。
 
 一般来说，软件开发是以周期进行的。例如，加入一个功能，再写关于该功能的单元测试。但也有另一种软件开发方法论，称为测试驱动开发（test-driven development, TDD），它的主要循环步骤是：
 
@@ -243,57 +243,57 @@ TDD 是先写测试，再实现功能。好处是实现只会刚好满足测试�
 
 回到 leptjson 项目，`test.c` 包含了一个极简的单元测试框架：
 
-~~~
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include "leptjson.h"
+\~\~\~
+# include \<stdio.h\>
+# include \<stdlib.h\>
+# include \<string.h\>
+# include "leptjson.h"
 
-static int main_ret = 0;
-static int test_count = 0;
-static int test_pass = 0;
+static int main\_ret = 0;
+static int test\_count = 0;
+static int test\_pass = 0;
 
-#define EXPECT_EQ_BASE(equality, expect, actual, format) \
-    do {\
-        test_count++;\
-        if (equality)\
-            test_pass++;\
-        else {\
-            fprintf(stderr, "%s:%d: expect: " format " actual: " format "\n", __FILE__, __LINE__, expect, actual);\
-            main_ret = 1;\
-        }\
-    } while(0)
+# define EXPECT\_EQ\_BASE(equality, expect, actual, format) \\
+	do {\
+	    test_count++;\
+	    if (equality)\
+	        test_pass++;\
+	    else {\
+	        fprintf(stderr, "%s:%d: expect: " format " actual: " format "\n", __FILE__, __LINE__, expect, actual);\
+	        main_ret = 1;\
+	    }\
+	} while(0)
 
-#define EXPECT_EQ_INT(expect, actual) EXPECT_EQ_BASE((expect) == (actual), expect, actual, "%d")
+# define EXPECT\_EQ\_INT(expect, actual) EXPECT\_EQ\_BASE((expect) == (actual), expect, actual, "%d")
 
-static void test_parse_null() {
-    lept_value v;
-    v.type = LEPT_TRUE;
-    EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, "null"));
-    EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v));
+static void test\_parse\_null() {
+	lept_value v;
+	v.type = LEPT_TRUE;
+	EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, "null"));
+	EXPECT_EQ_INT(LEPT_NULL, lept_get_type(&v));
 }
 
-/* ... */
+/\* ... \*/
 
-static void test_parse() {
-    test_parse_null();
-    /* ... */
+static void test\_parse() {
+	test_parse_null();
+	/* ... */
 }
 
 int main() {
-    test_parse();
-    printf("%d/%d (%3.2f%%) passed\n", test_pass, test_count, test_pass * 100.0 / test_count);
-    return main_ret;
+	test_parse();
+	printf("%d/%d (%3.2f%%) passed\n", test_pass, test_count, test_pass * 100.0 / test_count);
+	return main_ret;
 }
-~~~
+\~\~\~
 
 现时只提供了一个 `EXPECT_EQ_INT(expect, actual)` 的宏，每次使用这个宏时，如果 expect != actual（预期值不等于实际值），便会输出错误信息。
 若按照 TDD 的步骤，我们先写一个测试，如上面的 `test_parse_null()`，而 `lept_parse()` 只返回 `LEPT_PARSE_OK`：
 
-~~~
+\~\~\~
 /Users/miloyip/github/json-tutorial/tutorial01/test.c:27: expect: 0 actual: 1
 1/2 (50.00%) passed
-~~~
+\~\~\~
 
 第一个返回 `LEPT_PARSE_OK`，所以是通过的。第二个测试因为 `lept_parse()` 没有把 `v.type` 改成 `LEPT_NULL`，造成失败。我们再实现 `lept_parse()` 令到它能通过测试。
 
@@ -303,46 +303,46 @@ int main() {
 
 有些同学可能不了解 `EXPECT_EQ_BASE` 宏的编写技巧，简单说明一下。反斜线代表该行未结束，会串接下一行。而如果宏里有多过一个语句（statement），就需要用 `do { /*...*/ } while(0)` 包裹成单个语句，否则会有如下的问题：
 
-~~~c
-#define M() a(); b()
+\~\~\~c
+# define M() a(); b()
 if (cond)
-    M();
+	M();
 else
-    c();
+	c();
 
-/* 预处理后 */
+/\* 预处理后 \*/
 
 if (cond)
-    a(); b(); /* b(); 在 if 之外     */
-else          /* <- else 缺乏对应 if */
-    c();
-~~~
+	a(); b(); /* b(); 在 if 之外     */
+else          /\* \<- else 缺乏对应 if \*/
+	c();
+\~\~\~
 
 只用 `{ }` 也不行：
 
-~~~c
-#define M() { a(); b(); }
+\~\~\~c
+# define M() { a(); b(); }
 
-/* 预处理后 */
+/\* 预处理后 \*/
 
 if (cond)
-    { a(); b(); }; /* 最后的分号代表 if 语句结束 */
-else               /* else 缺乏对应 if */
-    c();
-~~~
+	{ a(); b(); }; /* 最后的分号代表 if 语句结束 */
+else               /\* else 缺乏对应 if \*/
+	c();
+\~\~\~
 
 用 do while 就行了：
 
-~~~c
-#define M() do { a(); b(); } while(0)
+\~\~\~c
+# define M() do { a(); b(); } while(0)
 
-/* 预处理后 */
+/\* 预处理后 \*/
 
 if (cond)
-    do { a(); b(); } while(0);
+	do { a(); b(); } while(0);
 else
-    c();
-~~~
+	c();
+\~\~\~
 
 ## 实现解析器
 
@@ -350,24 +350,24 @@ else
 
 首先为了减少解析函数之间传递多个参数，我们把这些数据都放进一个 `lept_context` 结构体：
 
-~~~c
+\~\~\~c
 typedef struct {
-    const char* json;
-}lept_context;
+	const char* json;
+}lept\_context;
 
-/* ... */
+/\* ... \*/
 
-/* 提示：这里应该是 JSON-text = ws value ws */
-/* 以下实现没处理最后的 ws 和 LEPT_PARSE_ROOT_NOT_SINGULAR */
-int lept_parse(lept_value* v, const char* json) {
-    lept_context c;
-    assert(v != NULL);
-    c.json = json;
-    v->type = LEPT_NULL;
-    lept_parse_whitespace(&c);
-    return lept_parse_value(&c, v);
+/\* 提示：这里应该是 JSON-text = ws value ws \*/
+/\* 以下实现没处理最后的 ws 和 LEPT\_PARSE\_ROOT\_NOT\_SINGULAR \*/
+int lept\_parse(lept\_value\* v, const char\* json) {
+	lept_context c;
+	assert(v != NULL);
+	c.json = json;
+	v->type = LEPT_NULL;
+	lept_parse_whitespace(&c);
+	return lept_parse_value(&c, v);
 }
-~~~
+\~\~\~
 
 暂时我们只储存 json 字符串当前位置，之后的单元我们需要加入更多内容。
 
@@ -385,37 +385,37 @@ leptjson 是一个手写的递归下降解析器（recursive descent parser）�
 
 所以，我们可以按照 JSON 语法一节的 EBNF 简单翻译成解析函数：
 
-~~~c
-#define EXPECT(c, ch) do { assert(*c->json == (ch)); c->json++; } while(0)
+\~\~\~c
+# define EXPECT(c, ch) do { assert(\*c-\>json == (ch)); c-\>json++; } while(0)
 
-/* ws = *(%x20 / %x09 / %x0A / %x0D) */
-static void lept_parse_whitespace(lept_context* c) {
-    const char *p = c->json;
-    while (*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r')
-        p++;
-    c->json = p;
+/\* ws = *(%x20 / %x09 / %x0A / %x0D) */
+static void lept\_parse\_whitespace(lept\_context\* c) {
+	const char *p = c->json;
+	while (*p == ' ' || *p == '\t' || *p == '\n' || *p == '\r')
+	    p++;
+	c->json = p;
 }
 
-/* null  = "null" */
-static int lept_parse_null(lept_context* c, lept_value* v) {
-    EXPECT(c, 'n');
-    if (c->json[0] != 'u' || c->json[1] != 'l' || c->json[2] != 'l')
-        return LEPT_PARSE_INVALID_VALUE;
-    c->json += 3;
-    v->type = LEPT_NULL;
-    return LEPT_PARSE_OK;
+/\* null  = "null" \*/
+static int lept\_parse\_null(lept\_context\* c, lept\_value\* v) {
+	EXPECT(c, 'n');
+	if (c->json[0] != 'u' || c->json[1] != 'l' || c->json[2] != 'l')
+	    return LEPT_PARSE_INVALID_VALUE;
+	c->json += 3;
+	v->type = LEPT_NULL;
+	return LEPT_PARSE_OK;
 }
 
-/* value = null / false / true */
-/* 提示：下面代码没处理 false / true，将会是练习之一 */
-static int lept_parse_value(lept_context* c, lept_value* v) {
-    switch (*c->json) {
-        case 'n':  return lept_parse_null(c, v);
-        case '\0': return LEPT_PARSE_EXPECT_VALUE;
-        default:   return LEPT_PARSE_INVALID_VALUE;
-    }
+/\* value = null / false / true \*/
+/\* 提示：下面代码没处理 false / true，将会是练习之一 \*/
+static int lept\_parse\_value(lept\_context\* c, lept\_value\* v) {
+	switch (*c->json) {
+	    case 'n':  return lept_parse_null(c, v);
+	    case '\0': return LEPT_PARSE_EXPECT_VALUE;
+	    default:   return LEPT_PARSE_INVALID_VALUE;
+	}
 }
-~~~
+\~\~\~
 
 由于 `lept_parse_whitespace()` 是不会出现错误的，返回类型为 `void`。其它的解析函数会返回错误码，传递至顶层。
 
@@ -423,15 +423,15 @@ static int lept_parse_value(lept_context* c, lept_value* v) {
 
 断言（assertion）是 C 语言中常用的防御式编程方式，减少编程错误。最常用的是在函数开始的地方，检测所有参数。有时候也可以在调用函数后，检查上下文是否正确。
 
-C 语言的标准库含有 [`assert()`](http://en.cppreference.com/w/c/error/assert) 这个宏（需 `#include <assert.h>`），提供断言功能。当程序以 release 配置编译时（定义了 `NDEBUG` 宏），`assert()` 不会做检测；而当在 debug 配置时（没定义 `NDEBUG` 宏），则会在运行时检测 `assert(cond)` 中的条件是否为真（非 0），断言失败会直接令程序崩溃。
+C 语言的标准库含有 [`assert()`][21] 这个宏（需 `#include <assert.h>`），提供断言功能。当程序以 release 配置编译时（定义了 `NDEBUG` 宏），`assert()` 不会做检测；而当在 debug 配置时（没定义 `NDEBUG` 宏），则会在运行时检测 `assert(cond)` 中的条件是否为真（非 0），断言失败会直接令程序崩溃。
 
 例如上面的 `lept_parse_null()` 开始时，当前字符应该是 `'n'`，所以我们使用一个宏 `EXPECT(c, ch)` 进行断言，并跳到下一字符。
 
 初使用断言的同学，可能会错误地把含副作用的代码放在 `assert()` 中：
 
-~~~c
-assert(x++ == 0); /* 这是错误的! */
-~~~
+\~\~\~c
+assert(x++ == 0); /\* 这是错误的! \*/
+\~\~\~
 
 这样会导致 debug 和 release 版的行为不一样。
 
@@ -456,3 +456,28 @@ assert(x++ == 0); /* 这是错误的! */
    因为这个测试框架使用了 `__LINE__` 这个编译器提供的宏，代表编译时该行的行号。如果用函数或内联函数，每次的行号便都会相同。另外，内联函数是 C99 的新增功能，本教程使用 C89。
 
 其他常见问答将会从评论中整理。
+
+[1]:	https://zhuanlan.zhihu.com/json-tutorial
+[2]:	https://github.com/miloyip/json-tutorial
+[3]:	#json-%E6%98%AF%E4%BB%80%E4%B9%88
+[4]:	#%E6%90%AD%E5%BB%BA%E7%BC%96%E8%AF%91%E7%8E%AF%E5%A2%83
+[5]:	#%E5%A4%B4%E6%96%87%E4%BB%B6%E4%B8%8E-api-%E8%AE%BE%E8%AE%A1
+[6]:	#json-%E8%AF%AD%E6%B3%95%E5%AD%90%E9%9B%86
+[7]:	#%E5%8D%95%E5%85%83%E6%B5%8B%E8%AF%95
+[8]:	#%E5%AE%8F%E7%9A%84%E7%BC%96%E5%86%99%E6%8A%80%E5%B7%A7
+[9]:	#%E5%AE%9E%E7%8E%B0%E8%A7%A3%E6%9E%90%E5%99%A8
+[10]:	#%E5%85%B3%E4%BA%8E%E6%96%AD%E8%A8%80
+[11]:	#%E6%80%BB%E7%BB%93%E4%B8%8E%E7%BB%83%E4%B9%A0
+[12]:	#%E5%B8%B8%E8%A7%81%E9%97%AE%E7%AD%94
+[13]:	http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf
+[14]:	https://github.com/miloyip/json-tutorial
+[15]:	https://cmake.org/
+[16]:	http://brew.sh/
+[17]:	http://rfc7159.net/rfc7159
+[18]:	https://tools.ietf.org/html/rfc5234
+[19]:	https://github.com/google/googletest
+[20]:	http://www.nunit.org/
+[21]:	http://en.cppreference.com/w/c/error/assert
+
+[image-1]:	images/requirement.png
+[image-2]:	images/cmake-gui.png
